@@ -13,7 +13,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="556.0" prefWidth="787.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="martin.PrimaryController">
    <children>
-      <ListView fx:id="list" layoutX="285.0" layoutY="28.0" prefHeight="500.0" prefWidth="461.0" />
+      <ListView fx:id="list" layoutX="285.0" layoutY="28.0" onMouseClicked="#loadProductToFields" prefHeight="500.0" prefWidth="461.0" />
       <VBox layoutX="40.0" layoutY="28.0" prefWidth="217.0" spacing="5.0">
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -55,8 +55,9 @@
                   <TextField fx:id="priceUp" />
                </children>
             </HBox>
-            <Button fx:id="addToListBtn" mnemonicParsing="false" onAction="#addToList" text="Добавить в список" />
-            <Button fx:id="removeFromListBtn" mnemonicParsing="false" onAction="#removeFromList" text="Удалить из списка" />
+            <Button fx:id="addToListBtn" mnemonicParsing="false" onAction="#addToList" text="Добавить продукт" />
+            <Button fx:id="modifyInListBtn" mnemonicParsing="false" onAction="#modifyInList" text="Изменить продукт" />
+            <Button fx:id="removeFromListBtn" mnemonicParsing="false" onAction="#removeFromList" text="Удалить продукт" />
             <Button fx:id="clearBtn" mnemonicParsing="false" onAction="#clearFields" text="Очистить поля" />
          </children>
       </VBox>

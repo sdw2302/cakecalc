@@ -87,7 +87,12 @@ public class Product {
     public String toString() {
         String generatedString = "";
         generatedString += productName + ": Использовано " + usedQuantity + " из " + boughtQuantity + " за "
-                + priceBought + " грн + " + priceUp + "%";
+                + priceBought;
+        if (isPriceFor100g()) {
+            generatedString += " грн/100г + " + priceUp + "%";
+        } else {
+            generatedString += " грн + " + priceUp + "%";
+        }
         return generatedString;
     }
 

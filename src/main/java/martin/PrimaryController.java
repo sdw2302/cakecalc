@@ -17,7 +17,7 @@ public class PrimaryController {
     RadioButton priceRadio1, priceRadio2;
 
     @FXML
-    Button addToListBtn, removeFromListBtn, clearBtn;
+    Button addToListBtn, modifyInListBtn, removeFromListBtn, clearBtn;
 
     @FXML
     ListView<Product> list;
@@ -32,6 +32,13 @@ public class PrimaryController {
             return;
         }
 
+        for (int i = 0; i < list.getItems().toArray().length; i++) {
+            if (list.getItems().get(i).productName.trim().equals(productName.getText().trim())) {
+                this.createAlert("Продукт с таким названием уже существует");
+                return;
+            }
+        }
+
         try {
             if (Double.parseDouble(usedQuantity.getText()) > Double.parseDouble(boughtQuantity.getText())) {
                 this.createAlert("Не может быть использовано больше чем имеется");
@@ -44,6 +51,33 @@ public class PrimaryController {
         } catch (Exception e) {
             this.createAlert("Проверьте формат введённых данных");
         }
+    }
+
+    public void loadProductToFields() {
+        int index = list.getSelectionModel().getSelectedIndex();
+
+        Product product = list.getItems().get(index);
+
+        productName.setText(product.getProductName());
+        boughtQuantity.setText(String.valueOf(product.getBoughtQuantity()));
+        usedQuantity.setText(String.valueOf(product.getUsedQuantity()));
+        priceBought.setText(String.valueOf(product.getPriceBought()));
+        priceUp.setText(String.valueOf(product.getPriceUp()));
+        priceRadio1.setSelected(product.isPriceFor100g());
+        priceRadio2.setSelected(product.isTotalPrice());
+    }
+
+    public void modifyInList() {
+        if (list.getSelectionModel().isEmpty())
+            return;
+        int index = list.getSelectionModel().getSelectedIndex();
+
+        Product product = new Product(productName.getText(), Double.parseDouble(boughtQuantity.getText()),
+                Double.parseDouble(usedQuantity.getText()), Double.parseDouble(priceBought.getText()),
+                priceRadio1.isSelected(), priceRadio2.isSelected(), Double.parseDouble(priceUp.getText()));
+
+        list.getItems().remove(index);
+        list.getItems().add(index, product);
     }
 
     public void removeFromList() {
@@ -69,13 +103,19 @@ public class PrimaryController {
 
         for (int i = 0; i < list.getItems().toArray().length; i++) {
             Product product = list.getItems().get(i);
-            price += Math.round(
-                    (product.getPriceBought() * (product.getUsedQuantity() / product.getBoughtQuantity()))
-                            * (100.0 + product.getPriceUp()))
-                    / 100.0;
+            if (product.isTotalPrice())
+                price += Math
+                        .round((product.getPriceBought() * (product.getUsedQuantity() / product.getBoughtQuantity()))
+                                * (100.0 + product.getPriceUp()))
+                        / 100.0;
+            else
+                price += Math
+                        .round((product.getPriceBought() * (product.getUsedQuantity() / 100.0))
+                                * (100.0 + product.getPriceUp()))
+                        / 100.0;
         }
 
-        totalPrice.setText(String.valueOf(price));
+        totalPrice.setText(String.valueOf(price) + " грн");
     }
 
     private void createAlert(String message) {
