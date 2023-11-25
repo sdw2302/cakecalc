@@ -60,6 +60,7 @@
             <Button fx:id="modifyInListBtn" mnemonicParsing="false" onAction="#modifyInList" text="Изменить продукт" />
             <Button fx:id="removeFromListBtn" mnemonicParsing="false" onAction="#removeFromList" text="Удалить продукт" />
             <Button fx:id="clearBtn" mnemonicParsing="false" onAction="#clearFields" text="Очистить поля" />
+            <Button fx:id="clearBtn1" mnemonicParsing="false" onAction="#clearList" text="Очистить список" />
          </children>
       </VBox>
       <VBox alignment="TOP_CENTER" layoutX="40.0" layoutY="473.0" prefWidth="217.0" spacing="5.0">

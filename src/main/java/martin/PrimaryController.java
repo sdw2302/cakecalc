@@ -105,6 +105,10 @@ public class PrimaryController {
         priceRadio2.setSelected(true);
     }
 
+    public void clearList() {
+        list.getItems().clear();
+    }
+
     public void calcCakePrice() {
         if (list.getItems().toArray().length == 0)
             return;
@@ -126,14 +130,6 @@ public class PrimaryController {
         }
 
         totalPrice.setText(String.valueOf(price) + " грн");
-    }
-
-    private void createAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Ошибка");
-        alert.setHeaderText("Произошла ошибка");
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
     public void refreshCakeList() {
@@ -227,5 +223,13 @@ public class PrimaryController {
             rafile.close();
         } catch (Exception e) {
         }
+    }
+
+    private void createAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Ошибка");
+        alert.setHeaderText("Произошла ошибка");
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
