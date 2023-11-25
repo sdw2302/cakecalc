@@ -173,6 +173,7 @@ public class PrimaryController {
     public void loadCakeIngredientsToList() {
         list.getItems().clear();
         list.getItems().addAll(comboBox.getItems().get(comboBox.getSelectionModel().getSelectedIndex()).getProducts());
+        cakeName.setText(comboBox.getItems().get(comboBox.getSelectionModel().getSelectedIndex()).getCakeName());
     }
 
     public void saveCake() {
@@ -183,7 +184,22 @@ public class PrimaryController {
         }
 
         comboBox.getItems().add(new Cake(cakeName.getText(), productsArray));
+        saveToFile();
+    }
 
+    public void modifySelectedCake() {
+        comboBox.getItems().remove(comboBox.getSelectionModel().getSelectedIndex());
+        saveCake();
+    }
+
+    public void removeSelectedCake() {
+        comboBox.getItems().remove(comboBox.getSelectionModel().getSelectedIndex());
+        cakeName.clear();
+        list.getItems().clear();
+        saveToFile();
+    }
+
+    private void saveToFile() {
         try {
             File file = new File("savedCakes");
             file.delete();

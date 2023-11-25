@@ -86,8 +86,8 @@
                </children>
             </HBox>
             <Button mnemonicParsing="false" onAction="#saveCake" text="Сохранить новый торт" />
-            <Button mnemonicParsing="false" onAction="#calcCakePrice" text="Изменить выбранный торт" />
-            <Button mnemonicParsing="false" onAction="#calcCakePrice" text="Удалить выбранный торт" />
+            <Button mnemonicParsing="false" onAction="#modifySelectedCake" text="Изменить выбранный торт" />
+            <Button mnemonicParsing="false" onAction="#removeSelectedCake" text="Удалить выбранный торт" />
          </children>
       </VBox>
    </children>
