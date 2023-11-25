@@ -1,8 +1,15 @@
 package martin;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.ArrayList;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
@@ -11,7 +18,7 @@ import javafx.scene.control.TextField;
 public class PrimaryController {
 
     @FXML
-    TextField productName, boughtQuantity, usedQuantity, priceBought, priceUp;
+    TextField productName, boughtQuantity, usedQuantity, priceBought, priceUp, cakeName;
 
     @FXML
     RadioButton priceRadio1, priceRadio2;
@@ -24,6 +31,9 @@ public class PrimaryController {
 
     @FXML
     Label totalPrice;
+
+    @FXML
+    ComboBox<Cake> comboBox;
 
     public void addToList() {
         if (productName.getText().equals("") || boughtQuantity.getText().equals("") || usedQuantity.getText().equals("")
@@ -124,5 +134,82 @@ public class PrimaryController {
         alert.setHeaderText("Произошла ошибка");
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public void refreshCakeList() {
+        try {
+            File file = new File("savedCakes");
+            if (!file.exists()) {
+                throw new FileNotFoundException();
+            }
+            RandomAccessFile rafile = new RandomAccessFile(file, "rw");
+
+            rafile.seek(0);
+            int ctr = rafile.readInt();
+
+            ArrayList<Cake> cakesList = new ArrayList<>();
+
+            for (int i = 0; i < ctr; i++) {
+                String cakeName = rafile.readUTF();
+                ArrayList<Product> productsList = new ArrayList<>();
+                int productsCtr = rafile.readInt();
+                for (int j = 0; j < productsCtr; j++) {
+                    productsList.add(new Product(rafile.readUTF(), rafile.readDouble(), rafile.readDouble(),
+                            rafile.readDouble(), rafile.readBoolean(), rafile.readBoolean(), rafile.readDouble()));
+                }
+                cakesList.add(new Cake(cakeName, productsList));
+            }
+            comboBox.getItems().clear();
+            comboBox.getItems().addAll(cakesList);
+
+            rafile.close();
+        } catch (FileNotFoundException e) {
+            this.createAlert("Файл с сохранёнными тортами не существует или находится в другом месте");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadCakeIngredientsToList() {
+        list.getItems().clear();
+        list.getItems().addAll(comboBox.getItems().get(comboBox.getSelectionModel().getSelectedIndex()).getProducts());
+    }
+
+    public void saveCake() {
+        ArrayList<Product> productsArray = new ArrayList<>();
+
+        for (int i = 0; i < list.getItems().toArray().length; i++) {
+            productsArray.add(list.getItems().get(i));
+        }
+
+        comboBox.getItems().add(new Cake(cakeName.getText(), productsArray));
+
+        try {
+            File file = new File("savedCakes");
+            file.delete();
+            file.createNewFile();
+            RandomAccessFile rafile = new RandomAccessFile(file, "rw");
+
+            rafile.seek(0);
+            rafile.writeInt(comboBox.getItems().toArray().length);
+
+            for (int i = 0; i < comboBox.getItems().toArray().length; i++) {
+                Cake cake = comboBox.getItems().get(i);
+                rafile.writeUTF(cake.getCakeName());
+                rafile.writeInt(cake.getProducts().toArray().length);
+                for (Product product : cake.getProducts()) {
+                    rafile.writeUTF(product.getProductName());
+                    rafile.writeDouble(product.getBoughtQuantity());
+                    rafile.writeDouble(product.getUsedQuantity());
+                    rafile.writeDouble(product.getPriceBought());
+                    rafile.writeBoolean(product.isPriceFor100g());
+                    rafile.writeBoolean(product.isTotalPrice());
+                    rafile.writeDouble(product.getPriceUp());
+                }
+            }
+
+            rafile.close();
+        } catch (Exception e) {
+        }
     }
 }
