@@ -1,4 +1,4 @@
-package martin;
+package com.martin;
 
 import java.io.File;
 import java.io.FileNotFoundException;

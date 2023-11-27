@@ -1,4 +1,4 @@
-package martin;
+package com.martin;
 
 public class Product {
     String productName;
